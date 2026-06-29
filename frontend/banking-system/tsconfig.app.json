@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["dom", "es2022"],
+    "outDir": "./out-tsc/app",
+    "rootDir": "./src",
+    "types": []
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts"
+  ]
+}

@@ -1,0 +1,243 @@
+<main class="page">
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Banking System</p>
+      <h1>Accounts</h1>
+      <p class="subtitle">
+        Review account balances, create new accounts, and move funds between customers.
+      </p>
+    </div>
+
+    <button
+      class="add-button"
+      type="button"
+      (click)="openCreateAccountDialog()">
+      <span>+</span>
+      Add Account
+    </button>
+  </section>
+
+  <section class="summary-strip">
+    <div class="summary-item">
+      <span>Total Accounts</span>
+      <strong>{{ bankAccounts.length }}</strong>
+    </div>
+
+    <div class="summary-item">
+      <span>Transfer Tools</span>
+      <strong>CR / DR</strong>
+    </div>
+  </section>
+
+  <div
+    class="alert error-alert"
+    *ngIf="pageError">
+    {{ pageError }}
+  </div>
+
+  <section class="table-panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Portfolio</p>
+        <h2>Customer Accounts</h2>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Account No.</th>
+            <th>Holder Name</th>
+            <th>Balance</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let account of bankAccounts">
+            <td data-label="Account No.">
+              <button
+                class="account-link"
+                type="button"
+                (click)="openAccount(account.accountNumber)">
+                {{ account.accountNumber }}
+              </button>
+            </td>
+
+            <td data-label="Holder Name">
+              <div class="holder-cell">
+                <span class="avatar">
+                  {{ account.accountHolderName.charAt(0) || 'A' }}
+                </span>
+                <span>{{ account.accountHolderName }}</span>
+              </div>
+            </td>
+
+            <td data-label="Balance" class="balance">
+              {{ account.balance | currency:'INR':'symbol':'1.2-2' }}
+            </td>
+
+            <td data-label="Actions">
+              <div class="action-group">
+                <button
+                  class="action-btn credit-btn"
+                  type="button"
+                  title="Credit account"
+                  (click)="openCreditDialog(account)">
+                  CR
+                </button>
+
+                <button
+                  class="action-btn debit-btn"
+                  type="button"
+                  title="Debit account"
+                  (click)="openDebitDialog(account)">
+                  DR
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="bankAccounts.length === 0">
+            <td colspan="4" class="empty-state">
+              No accounts found.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div
+    class="modal-backdrop"
+    *ngIf="showAddAccountDialog">
+    <div class="modal">
+      <div class="modal-header">
+        <p class="eyebrow">New customer</p>
+        <h3>Create Account</h3>
+      </div>
+
+      <div class="form-group">
+        <label for="accountHolderName">Holder Name</label>
+        <input
+          id="accountHolderName"
+          type="text"
+          placeholder="Enter holder name"
+          [(ngModel)]="accountHolderName">
+      </div>
+
+      <div class="form-group">
+        <label for="openingBalance">Opening Balance</label>
+        <input
+          id="openingBalance"
+          type="number"
+          placeholder="0.00"
+          [(ngModel)]="balance">
+      </div>
+
+      <div
+        class="alert error-alert modal-alert"
+        *ngIf="createAccountError">
+        {{ createAccountError }}
+      </div>
+
+      <div class="modal-actions">
+        <button
+          class="secondary-btn"
+          type="button"
+          (click)="closeCreateAccountDialog()">
+          Cancel
+        </button>
+
+        <button
+          class="primary-btn"
+          type="button"
+          (click)="createAccount()">
+          Create
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal-backdrop"
+    *ngIf="showTransferDialog">
+    <div class="modal">
+      <div class="modal-header">
+        <p class="eyebrow">Fund movement</p>
+        <h3>
+          {{ isCreditTransfer
+            ? 'Credit Account'
+            : 'Debit Account' }}
+        </h3>
+      </div>
+
+      <div class="current-account">
+        <span>Current Account</span>
+        <strong>{{ selectedAccount?.accountNumber }}</strong>
+      </div>
+
+      <div class="form-group">
+        <label for="otherAccount">
+          {{ isCreditTransfer
+            ? 'Source Account'
+            : 'Target Account' }}
+        </label>
+
+        <select
+          id="otherAccount"
+          [disabled]="isTransferring"
+          [(ngModel)]="selectedOtherAccountNumber">
+          <option value="">Select Account</option>
+
+          <option
+            *ngFor="let account of bankAccounts"
+            [value]="account.accountNumber"
+            [disabled]="
+              account.accountNumber ===
+              selectedAccount?.accountNumber">
+            {{ account.accountNumber }} - {{ account.accountHolderName }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="transferAmount">Amount</label>
+        <input
+          id="transferAmount"
+          type="number"
+          placeholder="0.00"
+          [disabled]="isTransferring"
+          [(ngModel)]="transferAmount">
+      </div>
+
+      <div
+        class="alert error-alert modal-alert"
+        *ngIf="transferError">
+        {{ transferError }}
+      </div>
+
+      <div class="modal-actions">
+        <button
+          class="secondary-btn"
+          type="button"
+          [disabled]="isTransferring"
+          (click)="closeTransferDialog()">
+          Cancel
+        </button>
+
+        <button
+          class="primary-btn"
+          type="button"
+          [disabled]="
+            isTransferring ||
+            !selectedOtherAccountNumber ||
+            transferAmount <= 0"
+          (click)="createTransfer()">
+          {{ isTransferring ? 'Transferring...' : 'Transfer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</main>

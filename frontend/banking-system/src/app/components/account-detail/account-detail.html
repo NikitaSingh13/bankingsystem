@@ -1,0 +1,113 @@
+<main class="page">
+  <button
+    class="back-button"
+    type="button"
+    (click)="goBack()">
+    Back
+  </button>
+
+  <div
+    class="alert error-alert"
+    *ngIf="pageError">
+    {{ pageError }}
+  </div>
+
+  <ng-container *ngIf="account">
+  <section class="account-hero">
+    <div>
+      <p class="eyebrow">Account Details</p>
+      <h1>{{ account.accountHolderName }}</h1>
+      <p class="account-number">{{ account.accountNumber }}</p>
+    </div>
+
+    <div class="balance-card">
+      <span>Available Balance</span>
+      <strong>{{ account.balance | currency:'INR':'symbol':'1.2-2' }}</strong>
+    </div>
+  </section>
+
+  <section class="details-grid">
+    <div class="detail-item">
+      <span>Account No.</span>
+      <strong>{{ account.accountNumber }}</strong>
+    </div>
+
+    <div class="detail-item">
+      <span>Holder Name</span>
+      <strong>{{ account.accountHolderName }}</strong>
+    </div>
+
+    <div class="detail-item">
+      <span>Transactions</span>
+      <strong>{{ transfers.length }}</strong>
+    </div>
+  </section>
+
+  <section class="table-panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Ledger</p>
+        <h2>Transactions</h2>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Transaction No.</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>From / To</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let transfer of transfers">
+            <td data-label="Transaction No.">
+              #{{ transfer.transactionId }}
+            </td>
+
+            <td data-label="Date">
+              {{ transfer.date | date:'dd-MMM-yyyy HH:mm' }}
+            </td>
+
+            <td data-label="Type">
+              <span
+                class="type-pill"
+                [class.credit-pill]="transfer.type === 'CREDIT'"
+                [class.debit-pill]="transfer.type === 'DEBIT'">
+                {{ transfer.type }}
+              </span>
+            </td>
+
+            <td data-label="From / To">
+              {{ transfer.fromToAccountNumber }}
+            </td>
+
+            <td data-label="Amount">
+              <span
+                class="amount"
+                [class.credit]="transfer.type === 'CREDIT'"
+                [class.debit]="transfer.type === 'DEBIT'">
+
+                {{ transfer.type === 'DEBIT' ? '(' : '' }}
+                {{ transfer.amount | currency:'INR':'symbol':'1.2-2' }}
+                {{ transfer.type === 'DEBIT' ? ')' : '' }}
+
+              </span>
+            </td>
+          </tr>
+
+          <tr *ngIf="transfers.length === 0">
+            <td colspan="5" class="empty-state">
+              No transactions found.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  </ng-container>
+</main>
