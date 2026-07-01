@@ -1,5 +1,6 @@
 package com.example.bankingsystem.domain.model;
 
+import com.example.bankingsystem.annotation.CsvColumn;
 import com.example.bankingsystem.domain.entity.TransferType;
 
 import java.math.BigDecimal;
@@ -11,14 +12,19 @@ import java.util.Date;
  */
 public class TransferDetail {
 
+    @CsvColumn(header = "Amount", order = 5)
     private BigDecimal amount;
 
+    @CsvColumn(header = "Date", order = 2)
     private Date date;
 
+    @CsvColumn(header = "From/To", order = 4)
     private String fromToAccountNumber;
 
+    @CsvColumn(header = "Transaction Number", order = 1)
     private Long transactionId;
 
+    @CsvColumn(header = "Type", order = 3)
     private TransferType type;
 
     /**

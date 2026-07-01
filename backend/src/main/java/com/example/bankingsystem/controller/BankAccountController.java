@@ -10,9 +10,16 @@ import com.example.bankingsystem.dto.response.GetBankAccountResponse;
 import com.example.bankingsystem.dto.response.GetBankAccountsResponse;
 import com.example.bankingsystem.service.BankAccountService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * REST controller that exposes endpoints for managing bank accounts and
@@ -30,8 +37,18 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class BankAccountController {
 
-    @Autowired
-    private BankAccountService service;
+    private final BankAccountService service;
+
+    /**
+     * Constructs the bank account controller.
+     *
+     * @param controllerService bank account service
+     */
+    public BankAccountController(
+            final BankAccountService controllerService) {
+
+        service = controllerService;
+    }
 
     /**
      * Creates a new bank account.
@@ -78,6 +95,56 @@ public class BankAccountController {
                 service.createTransfer(request);
 
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Downloads all bank accounts as a CSV file.
+     *
+     * @return a {@link ResponseEntity} containing the CSV response
+     */
+    @GetMapping(value = "/downloads", produces = "text/csv")
+    public ResponseEntity<GetBankAccountsResponse> downloadBankAccountsCsv() {
+
+        final GetBankAccountsRequest request =
+                new GetBankAccountsRequest();
+
+        final GetBankAccountsResponse response =
+                service.getBankAccounts(request);
+
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"bank-accounts.csv\"")
+                .contentType(new MediaType("text", "csv"))
+                .body(response);
+    }
+
+    /**
+     * Downloads the transfers for a single bank account as a CSV file.
+     *
+     * @param accountNumber the account number whose transfers are downloaded
+     * @return a {@link ResponseEntity} containing the CSV response
+     */
+    @GetMapping(value = "{accountNumber}/transfers/downloads",
+            produces = "text/csv")
+    public ResponseEntity<GetBankAccountResponse> downloadTransfersCsv(
+            @PathVariable
+            final String accountNumber) {
+
+        final GetBankAccountRequest request =
+                new GetBankAccountRequest();
+
+        request.setAccountNumber(accountNumber);
+
+        final GetBankAccountResponse response =
+                service.getBankAccount(request);
+
+        return ResponseEntity.ok()
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"transfers.csv\"")
+                .contentType(new MediaType("text", "csv"))
+                .body(response);
     }
 
     /**

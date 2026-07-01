@@ -1,5 +1,7 @@
 package com.example.bankingsystem.domain.model;
 
+import com.example.bankingsystem.annotation.CsvColumn;
+
 import java.math.BigDecimal;
 
 /**
@@ -8,10 +10,13 @@ import java.math.BigDecimal;
  */
 public class BankAccountDetail {
 
+    @CsvColumn(header = "Holder Name", order = 2)
     private String accountHolderName;
 
+    @CsvColumn(header = "Account Number", order = 1)
     private String accountNumber;
 
+    @CsvColumn(header = "Balance", order = 3)
     private BigDecimal balance;
 
     /**

@@ -41,7 +41,7 @@ public interface BankAccountRepository
         """)
     Optional<BankAccount> findAndLock(
             @Param("accountNumber")
-            final String accountNumber);
+            String accountNumber);
 
     /**
      * Returns the bank account with the given public account number.
@@ -50,5 +50,5 @@ public interface BankAccountRepository
      * @return bank account if found
      */
     Optional<BankAccount> findByAccountNumber(
-            final String accountNumber);
+            String accountNumber);
 }

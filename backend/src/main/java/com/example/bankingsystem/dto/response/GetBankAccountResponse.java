@@ -1,10 +1,11 @@
 package com.example.bankingsystem.dto.response;
 
-import com.example.bankingsystem.domain.model.TransferDetail;
 import com.example.bankingsystem.domain.model.BankAccountDetail;
+import com.example.bankingsystem.domain.model.TransferDetail;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 /**
  * Represents the response returned when retrieving a specific
  * bank account.
@@ -14,7 +15,7 @@ import java.util.Collection;
  * with that account. It is returned to the client after the
  * requested account information has been successfully retrieved.</p>
  */
-public class GetBankAccountResponse {
+public class GetBankAccountResponse implements CsvResponse {
 
     private BankAccountDetail bankAccount;
 
@@ -49,6 +50,26 @@ public class GetBankAccountResponse {
      */
     public BankAccountDetail getBankAccount() {
         return bankAccount;
+    }
+
+    /**
+     * Returns the transfer CSV row type.
+     *
+     * @return CSV row type
+     */
+    @Override
+    public Class<?> getCsvRowType() {
+        return TransferDetail.class;
+    }
+
+    /**
+     * Returns transfers as CSV rows.
+     *
+     * @return CSV row objects
+     */
+    @Override
+    public Collection<?> getCsvRows() {
+        return getTransfers();
     }
 
     /**

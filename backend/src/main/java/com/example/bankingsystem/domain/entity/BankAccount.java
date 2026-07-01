@@ -22,7 +22,8 @@ public class BankAccount {
     @Column(name = "account_holder_name", length = 50, nullable = false)
     @NotBlank(message = "Account holder name cannot be blank")
     @Size(min = 1, max = 50,
-            message = "Account holder name must contain between 1 and 50 characters")
+            message = "Account holder name "
+                    + "must contain between 1 and 50 characters")
     @NaturalId
     private String accountHolderName;
 

@@ -8,13 +8,28 @@
       </p>
     </div>
 
-    <button
-      class="add-button"
-      type="button"
-      (click)="openCreateAccountDialog()">
-      <span>+</span>
-      Add Account
-    </button>
+    <div class="hero-actions">
+
+      <button
+        class="download-button"
+        type="button"
+        (click)="downloadBankAccounts()">
+
+        Download CSV
+
+      </button>
+
+      <button
+        class="add-button"
+        type="button"
+        (click)="openCreateAccountDialog()">
+
+        <span>+</span>
+        Add Account
+
+      </button>
+
+    </div>
   </section>
 
   <section class="summary-strip">

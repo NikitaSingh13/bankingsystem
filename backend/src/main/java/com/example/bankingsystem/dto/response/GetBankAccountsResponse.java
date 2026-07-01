@@ -12,7 +12,7 @@ import java.util.Collection;
  * available in the system. It is returned to the client after all bank
  * accounts have been successfully retrieved.</p>
  */
-public class GetBankAccountsResponse {
+public class GetBankAccountsResponse implements CsvResponse {
 
     private final Collection<BankAccountDetail> bankAccounts;
 
@@ -50,5 +50,25 @@ public class GetBankAccountsResponse {
      */
     public Collection<BankAccountDetail> getBankAccounts() {
         return new ArrayList<>(bankAccounts);
+    }
+
+    /**
+     * Returns the bank account CSV row type.
+     *
+     * @return CSV row type
+     */
+    @Override
+    public Class<?> getCsvRowType() {
+        return BankAccountDetail.class;
+    }
+
+    /**
+     * Returns bank accounts as CSV rows.
+     *
+     * @return CSV row objects
+     */
+    @Override
+    public Collection<?> getCsvRows() {
+        return getBankAccounts();
     }
 }

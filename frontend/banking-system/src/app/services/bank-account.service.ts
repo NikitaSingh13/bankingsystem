@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import {
-  BankAccount,
   CreateBankAccountRequest,
   CreateBankAccountResponse,
   GetBankAccountResponse,
@@ -44,6 +43,31 @@ export class BankAccountService {
    */
   createTransfer(request: CreateTransferRequest): Observable<CreateTransferResponse> {
     return this.http.put<CreateTransferResponse>(`${this.API_URL}/transfers`, request);
+  }
+
+  /**
+   * Downloads all bank accounts as a CSV file.
+   *
+   * @returns an observable containing the generated CSV file
+   */
+  downloadBankAccounts(): Observable<Blob> {
+    return this.http.get(`${this.API_URL}/downloads`, {
+      responseType: 'blob',
+    });
+  }
+
+  /**
+   * Downloads the transfers of a specific bank account
+   * as a CSV file.
+   *
+   * @param accountNumber the account number whose transfers
+   *                      should be downloaded
+   * @returns an observable containing the generated CSV file
+   */
+  downloadTransfers(accountNumber: string): Observable<Blob> {
+    return this.http.get(`${this.API_URL}/${accountNumber}/transfers/downloads`, {
+      responseType: 'blob',
+    });
   }
 
   /**

@@ -60,6 +60,35 @@
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
 }
 
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.download-button {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  color: #ffffff;
+  background: #2563eb;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+  transition: all 160ms ease;
+}
+
+.download-button:hover {
+  background: #1d4ed8;
+}
+
 .add-button span {
   display: grid;
   width: 24px;

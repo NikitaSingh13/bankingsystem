@@ -104,6 +104,48 @@ export class Accounts implements OnInit {
       });
   }
 
+  /**
+ * Downloads all bank accounts as a CSV file.
+ */
+downloadBankAccounts(): void {
+
+  this.service
+    .downloadBankAccounts()
+    .subscribe({
+
+      next: blob => {
+
+        const url =
+          window.URL.createObjectURL(blob);
+
+        const anchor =
+          document.createElement('a');
+
+        anchor.href = url;
+        anchor.download = 'bank-accounts.csv';
+
+        anchor.click();
+
+        anchor.remove();
+
+        window.URL.revokeObjectURL(url);
+      },
+
+      error: error => {
+
+        console.error(error);
+
+        this.pageError =
+          this.getErrorMessage(
+            error,
+            'Unable to download bank accounts.'
+          );
+
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+}
+
   openAccount(
     accountNumber: string
   ): void {

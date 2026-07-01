@@ -119,6 +119,57 @@ export class AccountDetail implements OnInit {
       });
   }
 
+  /**
+ * Downloads the transfers for the current bank account
+ * as a CSV file.
+ */
+downloadTransfers(): void {
+
+  if (!this.account) {
+
+    return;
+  }
+
+  this.service
+    .downloadTransfers(
+      this.account.accountNumber
+    )
+    .subscribe({
+
+      next: blob => {
+
+        const url =
+          window.URL.createObjectURL(blob);
+
+        const anchor =
+          document.createElement('a');
+
+        anchor.href = url;
+        anchor.download = 'transfers.csv';
+
+        anchor.click();
+
+        anchor.remove();
+
+        window.URL.revokeObjectURL(url);
+      },
+
+      error: error => {
+
+        console.error(error);
+
+        this.pageError =
+          this.getErrorMessage(
+            error,
+            'Unable to download transfers.'
+          );
+
+        this.changeDetectorRef
+          .detectChanges();
+      }
+    });
+}
+
   private getErrorMessage(
     error: unknown,
     fallbackMessage: string
